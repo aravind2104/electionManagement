@@ -1,28 +1,18 @@
-// src/pages/ElectionStatus.js
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { Card } from "@/components/ui/card";
-import { Alert } from "@/components/ui/alert";
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
-const ElectionStatus = () => {
-  const [hasVoted, setHasVoted] = useState(false);
-
-  useEffect(() => {
-    const fetchVoteStatus = async () => {
-      const response = await axios.get("/api/vote-status");
-      setHasVoted(response.data.hasVoted);
-    };
-    fetchVoteStatus();
-  }, []);
+const ElectionStatus: React.FC = () => {
+  const navigate = useNavigate();
 
   return (
-    <Card className="max-w-md mx-auto mt-10 p-6">
-      {hasVoted ? (
-        <Alert>You have successfully cast your vote.</Alert>
-      ) : (
-        <Alert variant="destructive">You have not voted yet. Cast your vote now!</Alert>
-      )}
-    </Card>
+    <div className="flex flex-col items-center justify-center h-screen">
+      <h2 className="text-2xl font-bold text-green-600">Vote Cast Successfully!</h2>
+      <p className="mt-2 text-gray-600">Thank you for participating in the election.</p>
+      <Button className="mt-4" onClick={() => navigate("/home")}>
+        Return to Home
+      </Button>
+    </div>
   );
 };
 

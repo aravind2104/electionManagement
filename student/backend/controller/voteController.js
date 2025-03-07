@@ -5,7 +5,8 @@ import CryptoJS from "crypto-js";
 
 export const voteForCandidate = async (req, res) => {
     try {
-        const { electionId, candidateName } = req.params;
+        const { electionId } = req.params;
+        const { candidateName } = req.body;
         const studentId = req.student._id;
         const student = await Student.findById(studentId);
         if (!student) {
@@ -17,6 +18,10 @@ export const voteForCandidate = async (req, res) => {
             return res.status(404).json({ error: "Election not found" });
         }
 
+        if(!Array.isArray(student.hasVoted)){
+            student.hasVoted = [];
+        }
+        
         if (student.hasVoted.includes(electionId)) {
             return res.status(400).json({ error: "You have already voted in this election" });
         }

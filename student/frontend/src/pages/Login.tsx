@@ -1,56 +1,70 @@
-// src/pages/Login.js
 import React, { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import axios from "axios";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { Alert } from "@/components/ui/alert";
 
-
-const Login = () => {
-  const [credentials, setCredentials] = useState({ email: "", password: "" });
-  const [error, setError] = useState("");
+const StudentLogin: React.FC = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+
     try {
-      const response = await axios.post("/api/login", credentials);
-      localStorage.setItem("token", response.data.token);
-      navigate("/dashboard");
-    } catch (e: unknown) {
-      if (axios.isAxiosError(e) && e.response) {
-        setError(e.response.data.message || "Invalid credentials. Please try again.");
-      } else {
-        setError("An unexpected error occurred. Please try again.");
+      const response = await axios.post("/api/auth/login", { email, password });
+
+      if (response.status === 200) {
+        const student = response.data.student;
+
+        // Store student info in localStorage or context
+        localStorage.setItem("student", JSON.stringify(student));
+
+        // Redirect based on voting status
+        if (student.hasVoted.length > 0) {
+          navigate("/dashboard");
+        } else {
+          navigate("/elections");
+        }
       }
+    } catch (err) {
+      setError(err.response?.data?.message || "Login failed. Please try again.");
     }
   };
 
   return (
-    <Card className="max-w-md mx-auto mt-10 p-6">
-      <h1 className="text-2xl font-bold mb-4">Login</h1>
-      {error && <Alert variant="destructive">{error}</Alert>}
-      <form onSubmit={handleLogin} className="space-y-4">
+    <div className="flex flex-col items-center justify-center h-screen">
+      <h2 className="text-2xl font-bold">Student Login</h2>
+
+      {error && <Alert className="mt-2 text-red-500">{error}</Alert>}
+
+      <form className="mt-4 w-80" onSubmit={handleLogin}>
         <Input
-          type="text"
-          placeholder="Email/Register ID"
-          value={credentials.email}
-          onChange={(e) => setCredentials({ ...credentials, email: e.target.value })}
+          type="email"
+          placeholder="Enter email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          className="mb-2"
         />
         <Input
           type="password"
-          placeholder="Password"
-          value={credentials.password}
-          onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+          placeholder="Enter password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          className="mb-4"
         />
         <Button type="submit" className="w-full">
           Login
         </Button>
       </form>
-    </Card>
+    </div>
   );
 };
 
-export default Login;
+export default StudentLogin;
