@@ -19,15 +19,19 @@ const electionSchema = new mongoose.Schema({
         type: Date,
         required: true
     },
+    startTime: {
+        type: String, // Format: "HH:MM AM/PM"
+        required: true
+    },
     endDate: {
         type: Date,
         required: true
     },
-    status: {
-        type: String,
-        enum: ["Upcoming", "Ongoing", "Completed"],
-        default: "Upcoming"
-    }
+    endTime: {
+        type: String, // Format: "HH:MM AM/PM"
+        required: true
+    },
+
 });
 
 const Election = mongoose.model("Election", electionSchema);

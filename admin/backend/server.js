@@ -2,14 +2,13 @@ import express from 'express'
 import dotenv from 'dotenv'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
-import authRoutes from './routes/authRoutes.js'
 import connectToMongoDB from './db/connectToDB.js'
-import voteRoutes from './routes/electionRoutes.js'
-import router from './routes/votingRoutes.js'
+import authRoutes from './routes/authRoutes.js'
+import accountRoutes from './routes/accountRoutes.js'
 
 dotenv.config()
 const app=express();
-const PORT=process.env.port || 5000
+const PORT=process.env.port || 6000
 app.use(express.json())
 app.use(cookieParser())
 app.use(
@@ -19,14 +18,10 @@ app.use(
     }),
 
   );
-app.get('/',(req,res)=>{
-    res.send("Hello World")
-})
 
-app.use('/auth',authRoutes)
-app.use("/election",voteRoutes)
-app.use('/vote',router)
 
+app.use("/auth",authRoutes)
+app.use("/students",accountRoutes)
 app.listen(PORT,'0.0.0.0',async ()=>{
      connectToMongoDB()
     console.log("server running")})
