@@ -11,7 +11,7 @@ const protectRoute = async (req, res, next) => {
 
         // Verify token
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
+        
         // Fetch student using the correct ObjectId (`decoded.id`)
         const student = await Student.findById(decoded.id).select("-password");
         if (!student) {

@@ -24,12 +24,9 @@ app.get('/',(req,res)=>{
 })
 
 app.use('/auth',authRoutes)
-<<<<<<< HEAD
 
-=======
 app.use("/election",voteRoutes)
 app.use('/vote',router)
->>>>>>> backend
 
 app.listen(PORT,'0.0.0.0',async ()=>{
      connectToMongoDB()
