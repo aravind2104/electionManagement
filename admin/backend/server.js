@@ -5,7 +5,10 @@ import cors from 'cors'
 import connectToMongoDB from './db/connectToDB.js'
 import authRoutes from './routes/authRoutes.js'
 import accountRoutes from './routes/accountRoutes.js'
+<<<<<<< HEAD
 import electionRoutes from './routes/electionRoutes.js'
+=======
+>>>>>>> origin/main
 
 dotenv.config()
 const app=express();
@@ -23,7 +26,10 @@ app.use(
 
 app.use("/auth",authRoutes)
 app.use("/students",accountRoutes)
+<<<<<<< HEAD
 app.use("/election",electionRoutes)
+=======
+>>>>>>> origin/main
 app.listen(PORT,'0.0.0.0',async ()=>{
      connectToMongoDB()
     console.log("server running")})
