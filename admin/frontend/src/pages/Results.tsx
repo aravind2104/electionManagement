@@ -1,32 +1,68 @@
-// src/pages/RealTimeResults.js
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Card } from "@/components/ui/card";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from "recharts";
+import { Table, TableHead, TableRow, TableHeader, TableCell, TableBody } from "@/components/ui/table";
+import { Alert } from "@/components/ui/alert";
 
-const RealTimeResults = () => {
-  const [results, setResults] = useState([]);
+interface Candidate {
+  name: string;
+  position: string;
+  votes: number;
+}
+
+const Results: React.FC = () => {
+  const [results, setResults] = useState<Candidate[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchResults = async () => {
+    try {
+      const response = await axios.get("/api/elections/results"); // Adjust the endpoint accordingly
+      setResults(response.data);
+      setError(null);
+    } catch (err) {
+      console.error("Error fetching results:", err);
+      setError("Failed to load results. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchResults = async () => {
-      const response = await axios.get("/api/results");
-      setResults(response.data);
-    };
-    fetchResults();
+    fetchResults(); // Fetch initially
+    const interval = setInterval(fetchResults, 5000); // Poll every 5 seconds
+    return () => clearInterval(interval); // Cleanup on unmount
   }, []);
 
   return (
-    <Card className="max-w-2xl mx-auto mt-10 p-6">
-      <h1 className="text-2xl font-bold mb-4">Real-Time Results</h1>
-      <BarChart width={500} height={300} data={results}>
-        <XAxis dataKey="name" />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        <Bar dataKey="votes" fill="#8884d8" />
-      </BarChart>
-    </Card>
+    <div className="flex flex-col items-center justify-center h-screen">
+      <Card className="w-full max-w-2xl p-4">
+        <h2 className="text-2xl font-bold text-center mb-4">Live Election Results</h2>
+
+        {loading ? <p className="text-center">Loading results...</p> : null}
+        {error ? <Alert className="mt-2 text-red-500">{error}</Alert> : null}
+
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Candidate</TableHead>
+              <TableHead>Position</TableHead>
+              <TableHead>Votes</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {results.map((candidate, index) => (
+              <TableRow key={index}>
+                <TableCell>{candidate.name}</TableCell>
+                <TableCell>{candidate.position}</TableCell>
+                <TableCell>{candidate.votes}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </Card>
+    </div>
   );
 };
 
-export default RealTimeResults;
+export default Results;

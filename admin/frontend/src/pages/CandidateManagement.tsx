@@ -1,99 +1,109 @@
-// src/pages/CandidateManagement.js
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Table } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 import { Alert } from "@/components/ui/alert";
 
-const CandidateManagement = () => {
-  const [candidates, setCandidates] = useState([]);
-  const [formData, setFormData] = useState({ name: "", photo: "", manifesto: "" });
-  const [error, setError] = useState("");
+const CandidateManagement: React.FC = () => {
+  const [title, setTitle] = useState("");
+  const [candidates, setCandidates] = useState([{ name: "", position: "" }]);
+  const [startDate, setStartDate] = useState("");
+  const [startTime, setStartTime] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [endTime, setEndTime] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchCandidates = async () => {
-      const response = await axios.get("/api/candidates");
-      setCandidates(response.data);
-    };
-    fetchCandidates();
-  }, []);
-
-  const handleAddCandidate = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post("/api/candidates", formData);
-      setCandidates([...candidates, response.data]);
-      setFormData({ name: "", photo: "", manifesto: "" });
-    } catch (error) {
-      setError("Failed to add candidate.");
-    }
+  const handleCandidateChange = (index: number, field: string, value: string) => {
+    const updatedCandidates = [...candidates];
+    updatedCandidates[index][field as keyof typeof candidates[0]] = value;
+    setCandidates(updatedCandidates);
   };
 
-  const handleDeleteCandidate = async (id) => {
+  const addCandidate = () => {
+    setCandidates([...candidates, { name: "", position: "" }]);
+  };
+
+  const removeCandidate = (index: number) => {
+    const updatedCandidates = candidates.filter((_, i) => i !== index);
+    setCandidates(updatedCandidates);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setSuccess(null);
+
     try {
-      await axios.delete(`/api/candidates/${id}`);
-      setCandidates(candidates.filter((candidate) => candidate.id !== id));
-    } catch (error) {
-      setError("Failed to delete candidate.");
+      const response = await axios.post("/api/admin/election/add", {
+        title,
+        candidates,
+        startDate,
+        startTime,
+        endDate,
+        endTime,
+      });
+
+      if (response.status === 201) {
+        setSuccess("Election created successfully!");
+        setTitle("");
+        setCandidates([{ name: "", position: "" }]);
+        setStartDate("");
+        setStartTime("");
+        setEndDate("");
+        setEndTime("");
+      }
+    } catch (err) {
+      console.error("Error adding election:", err);
+      setError("Failed to create election. Please try again.");
     }
   };
 
   return (
-    <Card className="max-w-2xl mx-auto mt-10 p-6">
-      <h1 className="text-2xl font-bold mb-4">Manage Candidates</h1>
-      {error && <Alert variant="destructive">{error}</Alert>}
-      <form onSubmit={handleAddCandidate} className="space-y-4 mb-6">
+    <div className="max-w-lg mx-auto mt-8 p-4 border rounded-lg shadow-md">
+      <h2 className="text-xl font-bold mb-4">Manage Election</h2>
+      {error && <Alert className="text-red-500">{error}</Alert>}
+      {success && <Alert className="text-green-500">{success}</Alert>}
+      <form onSubmit={handleSubmit}>
         <Input
           type="text"
-          placeholder="Name"
-          value={formData.name}
-          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+          placeholder="Election Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          required
+          className="mb-2"
         />
-        <Input
-          type="text"
-          placeholder="Photo URL"
-          value={formData.photo}
-          onChange={(e) => setFormData({ ...formData, photo: e.target.value })}
-        />
-        <Input
-          type="text"
-          placeholder="Manifesto"
-          value={formData.manifesto}
-          onChange={(e) => setFormData({ ...formData, manifesto: e.target.value })}
-        />
-        <Button type="submit" className="w-full">
-          Add Candidate
-        </Button>
+
+        {candidates.map((candidate, index) => (
+          <div key={index} className="mb-2 flex space-x-2">
+            <Input
+              type="text"
+              placeholder="Candidate Name"
+              value={candidate.name}
+              onChange={(e) => handleCandidateChange(index, "name", e.target.value)}
+              required
+            />
+            <Input
+              type="text"
+              placeholder="Position"
+              value={candidate.position}
+              onChange={(e) => handleCandidateChange(index, "position", e.target.value)}
+              required
+            />
+            <Button type="button" onClick={() => removeCandidate(index)} className="bg-red-500 text-white">-</Button>
+          </div>
+        ))}
+
+        <Button type="button" onClick={addCandidate} className="mb-2">+ Add Candidate</Button>
+
+        <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} required className="mb-2" />
+        <Input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} required className="mb-2" />
+        <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} required className="mb-2" />
+        <Input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} required className="mb-4" />
+
+        <Button type="submit" className="w-full">Create Election</Button>
       </form>
-      <Table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Photo</th>
-            <th>Manifesto</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {candidates.map((candidate) => (
-            <tr key={candidate.id}>
-              <td>{candidate.name}</td>
-              <td>
-                <img src={candidate.photo} alt={candidate.name} className="w-12 h-12 rounded-full" />
-              </td>
-              <td>{candidate.manifesto}</td>
-              <td>
-                <Button variant="destructive" onClick={() => handleDeleteCandidate(candidate.id)}>
-                  Delete
-                </Button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
-    </Card>
+    </div>
   );
 };
 

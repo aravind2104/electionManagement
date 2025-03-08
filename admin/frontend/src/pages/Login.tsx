@@ -1,51 +1,63 @@
-// src/pages/AdminLogin.js
 import React, { useState } from "react";
-import axios from "axios";
-import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { Card } from "@/components/ui/card";
+import axios from "axios";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { Alert } from "@/components/ui/alert";
 
-const AdminLogin = () => {
-  const [credentials, setCredentials] = useState({ email: "", password: "" });
-  const [error, setError] = useState("");
+const Login: React.FC = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+
     try {
-      const response = await axios.post("/api/admin/login", credentials);
-      localStorage.setItem("adminToken", response.data.token);
-      navigate("/admin/dashboard");
-    } catch {
-      setError("Invalid credentials. Please try again.");
+      const response = await axios.post("/api/admin/login", { email, password });
+      if (response.status === 200) {
+        const admin = response.data.admin;
+        localStorage.setItem("admin", JSON.stringify(admin));
+        navigate("/admin/dashboard");
+      }
+    } catch (err: unknown) {
+      console.error("Login failed:", err);
+      
+      if (axios.isAxiosError(err) && err.response) {
+        setError(err.response.data.message || "Invalid email or password.");
+      } else {
+        setError("An unexpected error occurred. Please try again.");
+      }
     }
   };
 
   return (
-    <Card className="max-w-md mx-auto mt-10 p-6">
-      <h1 className="text-2xl font-bold mb-4">Admin Login</h1>
-      {error && <Alert variant="destructive">{error}</Alert>}
-      <form onSubmit={handleLogin} className="space-y-4">
+    <div className="flex flex-col items-center justify-center h-screen">
+      <h2 className="text-2xl font-bold">Admin Login</h2>
+      {error && <Alert className="mt-2 text-red-500">{error}</Alert>}
+      <form className="mt-4 w-80" onSubmit={handleLogin}>
         <Input
           type="email"
-          placeholder="Email"
-          value={credentials.email}
-          onChange={(e) => setCredentials({ ...credentials, email: e.target.value })}
+          placeholder="Enter email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          className="mb-2"
         />
         <Input
           type="password"
-          placeholder="Password"
-          value={credentials.password}
-          onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+          placeholder="Enter password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          className="mb-4"
         />
-        <Button type="submit" className="w-full">
-          Login
-        </Button>
+        <Button type="submit" className="w-full">Login</Button>
       </form>
-    </Card>
+    </div>
   );
 };
 
-export default AdminLogin;
+export default Login;
