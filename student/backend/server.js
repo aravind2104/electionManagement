@@ -4,8 +4,14 @@ import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import authRoutes from './routes/authRoutes.js'
 import connectToMongoDB from './db/connectToDB.js'
+<<<<<<< HEAD
+import electionRoutes from './routes/electionRoutes.js'
+import votingRoutes from './routes/votingRoutes.js'
+import passwordRoutes from './routes/passwordRoutes.js'
+=======
 import voteRoutes from './routes/electionRoutes.js'
 import router from './routes/votingRoutes.js'
+>>>>>>> origin/main
 
 dotenv.config()
 const app=express();
@@ -24,9 +30,15 @@ app.get('/',(req,res)=>{
 })
 
 app.use('/auth',authRoutes)
+<<<<<<< HEAD
+app.use("/election",electionRoutes)
+app.use('/vote',votingRoutes)
+app.use('/password',passwordRoutes)
+=======
 
 app.use("/election",voteRoutes)
 app.use('/vote',router)
+>>>>>>> origin/main
 
 app.listen(PORT,'0.0.0.0',async ()=>{
      connectToMongoDB()

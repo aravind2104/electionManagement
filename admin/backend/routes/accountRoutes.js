@@ -1,5 +1,5 @@
 import express from "express";
-import { uploadStudents } from "../controller/accountsController.js";
+import { uploadStudents, deleteStudentsFromCSV } from "../controller/accountsController.js";
 import multer from "multer";
 import protectRoute from "../middleware/protecRoute.js";
 
@@ -11,7 +11,7 @@ const uploadMiddleware = upload.single("file");
 
 const router = express.Router();
 
-// Upload Students Route - Requires Authentication
 router.post("/upload-students", protectRoute, uploadMiddleware, uploadStudents);
+router.post("/delete-students", protectRoute, uploadMiddleware, deleteStudentsFromCSV);
 
 export default router;
