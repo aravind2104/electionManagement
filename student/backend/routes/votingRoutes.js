@@ -6,6 +6,6 @@ import { voteForCandidate } from "../controller/voteController.js";
 const router = express.Router();
 
 // Voting route (requires authentication)
-router.post("/:electionId/:candidateName", protectRoute, voteForCandidate);
+router.post("/", protectRoute, voteForCandidate);
 
 export default router;
