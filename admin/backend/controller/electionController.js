@@ -3,7 +3,7 @@ import Election from "../models/electionSchema.js";
 export const addElection = async (req, res) => {
     try {
         const { title, candidates, startDate, startTime, endDate, endTime } = req.body;
-
+        console.log(req.body)
         // Validate required fields
         if (!title || !candidates || candidates.length === 0 || !startDate || !startTime || !endDate || !endTime) {
             return res.status(400).json({ error: "All fields are required" });
@@ -11,7 +11,7 @@ export const addElection = async (req, res) => {
 
         // Ensure each candidate has a name and position
         for (const candidate of candidates) {
-            if (!candidate.name || !candidate.position) {
+            if (!candidate.name) {
                 return res.status(400).json({ error: "Each candidate must have a name and position" });
             }
         }
@@ -69,6 +69,7 @@ export const getElectionById = async (req, res) => {
 
 export const deleteElectionById = async (req, res) => {
     try {
+        console.log(req.params)
         const { id } = req.params; // Get election ID from request params
         const deletedElection = await Election.findByIdAndDelete(id);
 

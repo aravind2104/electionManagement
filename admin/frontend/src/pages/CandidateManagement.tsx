@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert } from "@/components/ui/alert";
 import Navbar from "../components/navbar";
+import { useNavigate } from "react-router-dom";
 
 const CandidateManagement: React.FC = () => {
   const [title, setTitle] = useState("");
@@ -14,6 +15,7 @@ const CandidateManagement: React.FC = () => {
   const [endTime, setEndTime] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const handleCandidateChange = (index: number, field: string, value: string) => {
     const updatedCandidates = [...candidates];
@@ -36,14 +38,14 @@ const CandidateManagement: React.FC = () => {
     setSuccess(null);
 
     try {
-      const response = await axios.post("/api/admin/election/add", {
+      const response = await axios.post("http://localhost:8000/election/add-election", {
         title,
         candidates,
         startDate,
         startTime,
         endDate,
         endTime,
-      });
+      },{withCredentials:true});
 
       if (response.status === 201) {
         setSuccess("Election created successfully!");
@@ -58,6 +60,8 @@ const CandidateManagement: React.FC = () => {
       console.error("Error adding election:", err);
       setError("Failed to create election. Please try again.");
     }
+    alert("Election created successfully!");
+    navigate("/admDash");
   };
 
   return (
@@ -84,13 +88,6 @@ const CandidateManagement: React.FC = () => {
               placeholder="Candidate Name"
               value={candidate.name}
               onChange={(e) => handleCandidateChange(index, "name", e.target.value)}
-              required
-            />
-            <Input
-              type="text"
-              placeholder="Position"
-              value={candidate.position}
-              onChange={(e) => handleCandidateChange(index, "position", e.target.value)}
               required
             />
             <Button type="button" onClick={() => removeCandidate(index)} className="bg-red-500 text-white">-</Button>

@@ -18,8 +18,11 @@ const AdminDashboard: React.FC = () => {
         <Card className="p-6 text-center shadow-lg">
           <CardContent>
             <h2 className="text-xl font-semibold mb-4">Elections</h2>
-            <Button onClick={() => navigate("/canlst")} className="bg-blue-600">
-              Go to Elections
+            <Button onClick={() => navigate("/addEle")} className="bg-green-600">
+              Add Election
+            </Button>
+            <Button onClick={() => navigate("/eleLst")} className="bg-blue-600">
+              View Current Elections
             </Button>
           </CardContent>
         </Card>

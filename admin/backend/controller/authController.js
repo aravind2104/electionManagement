@@ -1,6 +1,8 @@
 import bcrypt from "bcryptjs";
 import Admin from "../models/adminSchema.js";
 import { generateTokenAndSetCookie } from "../utils/generateToken.js";
+import jwt from "jsonwebtoken";
+const SECRET_KEY = process.env.JWT_SECRET || "your-secret-key";
 
 // **Admin Signup**
 export const adminSignup = async (req, res) => {
@@ -85,3 +87,19 @@ export const adminLogout = (req, res) => {
         res.status(500).json({ message: "Server error" });
     }
 };
+
+export const checkAuth = (req, res) => {
+    const token = req.cookies?.jwt; // Get JWT from cookies
+  
+    if (!token) {
+      return res.status(401).json({ authenticated: false, message: "No token provided" });
+    }
+  
+    try {
+      const decoded = jwt.verify(token, SECRET_KEY); // Verify token
+      res.status(200).json({ authenticated: true, admin: decoded });
+    } catch (error) {
+      return res.status(401).json({ authenticated: false, message: "Invalid token" });
+    }
+};
+  

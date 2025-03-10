@@ -8,7 +8,6 @@ const electionSchema = new mongoose.Schema({
     candidates: [
         {
             name: String,
-            position: String,
             votes: {
                 type: Number,
                 default: 0
