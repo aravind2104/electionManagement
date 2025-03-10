@@ -23,7 +23,7 @@ const Login: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post("https://localhost:5000/auth/login", { email, password });
+      const response = await axios.post("http://localhost:5000/auth/login", { email, password });
 
       localStorage.setItem("student", JSON.stringify(response.data.student));
 
@@ -51,7 +51,7 @@ const Login: React.FC = () => {
     setLoading(true);
 
     try {
-      await axios.post("https://localhost:5000/auth/send-otp", { email });
+      await axios.post("http://localhost:5000/auth/send-otp", { email });
       setOtpSent(true);
     } catch (err: unknown) {
       console.error("Failed to send OTP:", err);
@@ -72,7 +72,7 @@ const Login: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post("https://localhost:5000/auth/verify-otp", { email, otp });
+      const response = await axios.post("http://localhost:5000/auth/verify-otp", { email, otp });
 
       localStorage.setItem("student", JSON.stringify(response.data.student));
 

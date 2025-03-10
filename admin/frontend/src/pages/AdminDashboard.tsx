@@ -17,9 +17,9 @@ const AdminDashboard: React.FC = () => {
         {/* Manage Candidates */}
         <Card className="p-6 text-center shadow-lg">
           <CardContent>
-            <h2 className="text-xl font-semibold mb-4">Manage Candidates</h2>
+            <h2 className="text-xl font-semibold mb-4">Elections</h2>
             <Button onClick={() => navigate("/canlst")} className="bg-blue-600">
-              Go to Candidates
+              Go to Elections
             </Button>
           </CardContent>
         </Card>
@@ -27,9 +27,12 @@ const AdminDashboard: React.FC = () => {
         {/* Start/End Election */}
         <Card className="p-6 text-center shadow-lg">
           <CardContent>
-            <h2 className="text-xl font-semibold mb-4">Election Control</h2>
-            <Button onClick={() => navigate("/control")} className="bg-green-600">
-              Control Election
+            <h2 className="text-xl font-semibold mb-4">Students</h2>
+            <Button onClick={() => navigate("/addStud")} className="bg-green-600">
+              Add Students
+            </Button>
+            <Button onClick={() => navigate("/delStud")} className="bg-red-600">
+              Delete Students
             </Button>
           </CardContent>
         </Card>
@@ -37,7 +40,7 @@ const AdminDashboard: React.FC = () => {
         {/* View Results */}
         <Card className="p-6 text-center shadow-lg">
           <CardContent>
-            <h2 className="text-xl font-semibold mb-4">View Results</h2>
+            <h2 className="text-xl font-semibold mb-4">Results</h2>
             <Button onClick={() => navigate("/res")} className="bg-purple-600">
               View Results
             </Button>

@@ -5,6 +5,7 @@ import { generateTokenAndSetCookie } from "../utils/generateToken.js";
 // **Admin Signup**
 export const adminSignup = async (req, res) => {
     try {
+        console.log(req.body);
         const { name, email, password } = req.body;
 
         // Check if admin already exists

@@ -9,12 +9,12 @@ import electionRoutes from './routes/electionRoutes.js'
 
 dotenv.config()
 const app=express();
-const PORT=process.env.port || 6000
+const PORT=process.env.port || 8000
 app.use(express.json())
 app.use(cookieParser())
 app.use(
     cors({
-      origin: true, // Replace with your frontend origin
+      origin: "http://localhost:5174", // Replace with your frontend origin
       credentials: true, // Allow credentials (cookies)
     }),
 
@@ -25,5 +25,5 @@ app.use("/auth",authRoutes)
 app.use("/students",accountRoutes)
 app.use("/election",electionRoutes)
 app.listen(PORT,'0.0.0.0',async ()=>{
-     connectToMongoDB()
-    console.log("server running")})
+connectToMongoDB()
+console.log("server running")})

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -19,10 +19,10 @@ const AdminLogin: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post("/api/admin/login", { email, password });
+      const response = await axios.post("http://localhost:8000/auth/login", { email, password },{withCredentials:true});
       if (response.status === 200) {
         localStorage.setItem("admin", JSON.stringify(response.data.admin));
-        navigate("/admin/dashboard");
+        navigate("/admDash");
       }
     } catch (err: unknown) {
       console.error("Login failed:", err);
@@ -63,6 +63,9 @@ const AdminLogin: React.FC = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
+             <p className="text-center text-sm mt-3">
+          Don't have an account? <Link to="/register" className="text-blue-500">Sign Up as Admin</Link>
+        </p>
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? "Logging in..." : "Login"}
             </Button>
