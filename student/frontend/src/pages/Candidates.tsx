@@ -40,7 +40,7 @@ const Candidates: React.FC = () => {
 
   const handleVote = async (candidateName: string) => {
     try {
-      await axios.post(`/api/vote/${electionId}`, { candidateName }, { withCredentials: true });
+      await axios.post(`https://localhost:5000/vote/${electionId}`, { candidateName }, { withCredentials: true });
       setVoted(true);
     } catch (err) {
       console.error("Failed to fetch elections:", err);
