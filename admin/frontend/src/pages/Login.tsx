@@ -4,22 +4,24 @@ import axios from "axios";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert } from "@/components/ui/alert";
+import Navbar from "../components/navbar";
 
-const Login: React.FC = () => {
+const AdminLogin: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setLoading(true);
 
     try {
       const response = await axios.post("/api/admin/login", { email, password });
       if (response.status === 200) {
-        const admin = response.data.admin;
-        localStorage.setItem("admin", JSON.stringify(admin));
+        localStorage.setItem("admin", JSON.stringify(response.data.admin));
         navigate("/admin/dashboard");
       }
     } catch (err: unknown) {
@@ -30,34 +32,45 @@ const Login: React.FC = () => {
       } else {
         setError("An unexpected error occurred. Please try again.");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
-      <h2 className="text-2xl font-bold">Admin Login</h2>
-      {error && <Alert className="mt-2 text-red-500">{error}</Alert>}
-      <form className="mt-4 w-80" onSubmit={handleLogin}>
-        <Input
-          type="email"
-          placeholder="Enter email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          className="mb-2"
-        />
-        <Input
-          type="password"
-          placeholder="Enter password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          className="mb-4"
-        />
-        <Button type="submit" className="w-full">Login</Button>
-      </form>
+    <div>
+      <Navbar />
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+        <div className="bg-white shadow-md rounded-lg p-6 w-96">
+          <h2 className="text-2xl font-bold text-center">Admin Login</h2>
+          {error && (
+            <Alert className="mt-3 text-red-500 bg-red-100 p-2 text-center rounded-md">
+              {error}
+            </Alert>
+          )}
+          <form className="mt-4 space-y-4" onSubmit={handleLogin}>
+            <Input
+              type="email"
+              placeholder="Enter email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <Input
+              type="password"
+              placeholder="Enter password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? "Logging in..." : "Login"}
+            </Button>
+          </form>
+        </div>
+      </div>
     </div>
   );
 };
 
-export default Login;
+export default AdminLogin;

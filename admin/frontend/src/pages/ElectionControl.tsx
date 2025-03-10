@@ -3,6 +3,7 @@ import axios from "axios";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Alert } from "@/components/ui/alert";
+import Navbar from "../components/navbar";
 
 interface Election {
   _id: string;
@@ -53,6 +54,8 @@ const ElectionControl: React.FC = () => {
   }, []);
 
   return (
+    <div>
+      <Navbar/>
     <div className="flex flex-col items-center justify-center h-screen">
       <Card className="w-full max-w-md p-6 text-center">
         <h2 className="text-2xl font-bold mb-4">Election Control</h2>
@@ -76,6 +79,7 @@ const ElectionControl: React.FC = () => {
           </>
         )}
       </Card>
+    </div>
     </div>
   );
 };

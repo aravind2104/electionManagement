@@ -3,6 +3,7 @@ import axios from "axios";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert } from "@/components/ui/alert";
+import Navbar from "../components/navbar";
 
 const CandidateManagement: React.FC = () => {
   const [title, setTitle] = useState("");
@@ -60,6 +61,8 @@ const CandidateManagement: React.FC = () => {
   };
 
   return (
+    <div>
+      <Navbar/>
     <div className="max-w-lg mx-auto mt-8 p-4 border rounded-lg shadow-md">
       <h2 className="text-xl font-bold mb-4">Manage Election</h2>
       {error && <Alert className="text-red-500">{error}</Alert>}
@@ -103,6 +106,7 @@ const CandidateManagement: React.FC = () => {
 
         <Button type="submit" className="w-full">Create Election</Button>
       </form>
+    </div>
     </div>
   );
 };

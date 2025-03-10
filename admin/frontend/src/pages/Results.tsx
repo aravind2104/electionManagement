@@ -3,6 +3,7 @@ import axios from "axios";
 import { Card } from "@/components/ui/card";
 import { Table, TableHead, TableRow, TableHeader, TableCell, TableBody } from "@/components/ui/table";
 import { Alert } from "@/components/ui/alert";
+import Navbar from "../components/navbar";
 
 interface Candidate {
   name: string;
@@ -35,6 +36,8 @@ const Results: React.FC = () => {
   }, []);
 
   return (
+    <div>
+      <Navbar/>
     <div className="flex flex-col items-center justify-center h-screen">
       <Card className="w-full max-w-2xl p-4">
         <h2 className="text-2xl font-bold text-center mb-4">Live Election Results</h2>
@@ -61,6 +64,7 @@ const Results: React.FC = () => {
           </TableBody>
         </Table>
       </Card>
+    </div>
     </div>
   );
 };

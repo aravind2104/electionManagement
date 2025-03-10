@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+// import { Card } from "@/components/ui/card";
+// import { Button } from "@/components/ui/button";
 import { useParams } from "react-router-dom";
+import Navbar from "../components/navbar";
 
 // Define types
 interface Candidate {
@@ -48,6 +49,8 @@ const Candidates: React.FC = () => {
   };
 
   return (
+    <div>
+      <Navbar/>
     <div className="max-w-3xl mx-auto mt-10">
       {error && <p className="text-red-500 text-center">{error}</p>}
 
@@ -55,7 +58,7 @@ const Candidates: React.FC = () => {
         <>
           <h1 className="text-2xl font-bold text-center">{election.name}</h1>
 
-          {voted ? (
+          {/* {voted ? (
             <p className="text-center text-green-600 mt-4">✅ You have voted successfully!</p>
           ) : (
             election.candidates.map((candidate) => (
@@ -68,11 +71,12 @@ const Candidates: React.FC = () => {
                 </Button>
               </Card>
             ))
-          )}
+          )} */}
         </>
       ) : (
         <p className="text-center">Loading election details...</p>
       )}
+    </div>
     </div>
   );
 };

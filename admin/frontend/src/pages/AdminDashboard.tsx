@@ -2,11 +2,14 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import Navbar from "../components/navbar";
 
 const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
 
   return (
+    <div>
+      <Navbar/>
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
 
@@ -41,6 +44,7 @@ const AdminDashboard: React.FC = () => {
           </CardContent>
         </Card>
       </div>
+    </div>
     </div>
   );
 };

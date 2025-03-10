@@ -3,6 +3,7 @@ import axios from "axios";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Alert } from "@/components/ui/alert";
+import Navbar from "../components/navbar";
 
 // Define the type for the candidate prop
 interface Candidate {
@@ -43,6 +44,8 @@ const Vote: React.FC<VoteProps> = ({ candidate, electionId }) => {
   };
 
   return (
+    <div>
+      <Navbar/>
     <Card className="max-w-md mx-auto mt-10 p-6">
       <h2 className="text-xl font-bold text-center">{candidate.name}</h2>
       <img src={candidate.photo} alt={candidate.name} className="w-24 h-24 rounded-full mx-auto mt-4" />
@@ -59,6 +62,7 @@ const Vote: React.FC<VoteProps> = ({ candidate, electionId }) => {
         </>
       )}
     </Card>
+    </div>
   );
 };
 
